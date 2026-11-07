@@ -1,0 +1,9 @@
+[Default Applications]
+x-scheme-handler/zcode=zcode.desktop
+x-scheme-handler/anixart=anixapp.desktop
+x-scheme-handler/vk54701760=anixapp.desktop
+x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+x-scheme-handler/ror2mm=r2modman.desktop
+
+[Added Associations]

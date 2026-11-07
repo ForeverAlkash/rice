@@ -1,0 +1,27 @@
+# whitelist: всё по умолчанию игнорируется, трекается только райс
+/*
+!/hypr/
+!/quickshell/
+!/matugen/
+!/kitty/
+!/gtk-3.0/
+!/gtk-4.0/
+!/qt6ct/
+!/cava/
+!/btop/
+!/fastfetch/
+!/easyeffects/
+!/libinput-gestures.conf
+!/kdeglobals
+!/dolphinrc
+!/mimeapps.list
+!/user-dirs.dirs
+!/QtProject.conf
+!/.gitignore
+!/install.sh
+!/README.md
+
+# мусор внутри трекаемых директорий
+*.bak-*
+__pycache__/
+quickshell/wallpapers/
