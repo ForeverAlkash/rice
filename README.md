@@ -1,79 +1,62 @@
 # rice
 
-> [!NOTE]
-> Это форк [Prism](https://github.com/Jack02134x/prism-shell) — quickshell-шелла для Hyprland от [Jack02134x](https://github.com/Jack02134x). Вся магия окраски от обоев (matugen) и каркас — его; мои отличия перечислены [ниже](#отличия-от-ванильного-prism).
+Мой личный сетап Hyprland. Это **форк [Prism](https://github.com/Jack02134x/prism-shell)** — беру оттуда основу (quickshell-шелл + крашение темы от обоев), дальше всё докручено под себя.
 
-## Превью
+## Скрины
 
-**Dashboard** (`SUPER + D`) — плеер, погода, скринтайм, тумблеры:
+| | |
+|---|---|
+| ![dashboard](screenshots/dashboard.png) | ![wallpapers](screenshots/wallpapers.png) |
+| *Дашборд: плеер, погода, скринтайм, тумблеры* | *Пикер обоев — от них красится вся система* |
+| ![spotify](screenshots/spotify.png) | ![lock](screenshots/lock.png) |
+| *Бар поверх приложений* | *Локскрин + аватар* |
 
-![dashboard](screenshots/dashboard.png)
+## Что тут самодельное
 
-**Пикер обоев** — matugen красит kitty/GTK/QT/bar от выбранной картинки:
+Основа — Prism, но внутрь я добавил:
 
-![wallpapers](screenshots/wallpapers.png)
+- **AI в лаунчере** — `q <вопрос>` уходит в локальную Ollama, работает без облака
+- **Счётчик обновлений** — pacman-обновления видны прямо в шторке и на дашборде
+- **Переключатель аудиовыхода** — наушники/спикеры/монитор в пару кликов, с фильтрацией джеков
+- **Заметки** — плавающее окошко kitty с markdown-файлом, по хоткею
+- **Тёплый экран** — hyprsunset с запоминанием состояния
+- **Меню скриншотов** вместо мгновенного снимка
 
-**Lock** и **exit**:
+А ещё **вырезал** то, чем не пользуюсь: clock-app (часы свои), study noise, GLava, интеграцию с телефоном через KDE Connect.
 
-<p align="center">
-  <img src="screenshots/lock.png" width="49%">
-  <img src="screenshots/exit.png" width="49%">
-</p>
+Тему перевёл в монохром — вместо радуги акцентов один primary-цвет, лаунчер и локскрин переработаны. Мелочи в конфигах: bt-agent в автозапуск (чтобы наушники не отваливались), пофикшенный cliphist, Throne и Telegram на своих воркспейсах. Свои конфиги поверх — `hypr/hyprland.lua`, свайпы тачпада как back/forward, qt6ct/GTK-темы.
 
-**Бар** поверх приложений (Spotify):
+Подробный построчный diff от ванили я не веду — просто сравни с [upstream](https://github.com/Jack02134x/prism-shell), расхождений не так много.
 
-![spotify](screenshots/spotify.png)
+## Структура
 
-## Мой взгляд
-
-Ванильный Prism — отличный каркас, но я захотел: убрать не нужное мне (clock-app, study noise, GLava, KDE Connect), добавить местные плюшки (Ollama в лаунчере, счётчик обновлений, переключатель аудиовыхода, скретчпад, тёплый экран) и перевести тему в монохром. Дальше — список по пунктам.
-
-## Отличия от ванильного Prism
-
-**Убрано:**
-- floating clock (Chrono) и вся его IPC/таймерная обвязка — часы переделаны на чистый quickshell
-- study noise (brown/pink/white через ffplay) и его роль в Pomodoro (Focus) — остались только паузы и DND
-- GLava (десктопный визуализатор)
-- KDE Connect / Phone: карточка телефона, «Find my phone» и связанные иконки
-
-**Добавлено:**
-- **AI в лаунчере** — префикс `q ` шлёт вопрос локальной модели через Ollama; модель/URL/системный промпт настраиваются в `config.json` → `ai`
-- **Updates** — счётчик pacman-обновлений: бейдж в шторке управления, чип в дашборде, клик = refresh
-- **Audio Output switcher** — переключение наушники/спикеры/монитор с фильтрацией джеков (`Audio.cycleSink`)
-- **Screenshot menu** (`ScreenshotMenu.qml`) — панель выбора вместо мгновенного снимка
-- **Notes** — скретчпад: плавающий kitty с markdown-файлом в state-директории
-- **Warm screen** — тёплый экран через hyprsunset, состояние сохраняется между рестартами шелла
-
-**Изменено:**
-- монохромная тема: разноцветные `accent(N)` в дашборде/настройках заменены на единый `primary`
-- лаунчер: hover двигает выделение только после реального движения мыши (`mouseArmed`), новый скоринг поиска (`bestScore`), убраны цифровые шорткаты 1–5
-- lock screen: компактнее (шрифт 105 вместо 210, свои отступы маски), аватар — `MyAvatar/lilith.jpeg`
-- `prism.lua`: автостарт Bluetooth-агента (`bt-agent`, чтобы наушники не отваливались на passkey), исправлен контроль cliphist-вечеров (`pgrep -ax` вместо `pgrep -f`), Throne на `special:magic`, Telegram на workspace 3
-
-**Свои конфиги поверх:** `hypr/hyprland.lua`, `libinput-gestures.conf` (свайпы → mouse4/5), qt6ct/kdeglobals, dolphinrc, mimeapps.list.
-
-## Что внутри
-
-- `hypr/` — hyprland.lua (Prism starter, Lua-конфиг) + скрипты
-- `quickshell/` — Prism shell целиком (bar, launcher, dashboard, lock) + мои правки
-- `matugen/`, `kitty/`, `gtk-3.0/`, `gtk-4.0/`, `qt6ct/` — темизация от обоев (matugen → kitty/GTK/QT)
-- `cava/`, `btop/`, `fastfetch/`, `easyeffects/` — мелкие конфиги
-- `libinput-gestures.conf` — свайпы тачпада → back/forward (mouse4/5)
+```
+hypr/        — hyprland.lua (Lua-конфиг) + скрипты
+quickshell/  — сам шелл (форк Prism) + мои правки
+matugen/     — шаблоны: обои → kitty / GTK / QT / бар
+kitty/ gtk-3.0/ gtk-4.0/ qt6ct/  — темы приложений
+cava/ btop/ fastfetch/ easyeffects/ — мелочи
+screenshots/ — скрины для этого README
+install.sh   — установка одной командой
+```
 
 ## Установка
 
-На чистом Arch (без DE):
+Чистый Arch, без DE:
 
 ```bash
-git clone https://github.com/ForeverAlkash/rice.git ~/rice && cd ~/rice && ./install.sh
+git clone https://github.com/ForeverAlkash/rice.git ~/rice
+cd ~/rice && ./install.sh
 ```
 
-Клонировать можно куда угодно — скрипт сам раскладывает конфиги в `~/.config`.
-
 Скрипт:
-1. ставит все пакеты одним pacman-ом (Hyprland, quickshell, matugen, PipeWire, NetworkManager, kitty, thunar, шрифты, иконки, easyeffects, btop, fastfetch, mpv, libinput-gestures, ydotool…);
-2. копирует конфиги в `~/.config` — существующие файлы бэкапит как `<имя>.bak-<дата>`;
-3. докачивает обои (~155 МБ) из upstream prism-shell, если их нет;
-4. добавляет юзера в группу `input` и включает демон ydotool (для жестов; нужна перезагрузка/перезаход в сессию).
+1. ставит пакеты (Hyprland, quickshell, matugen, PipeWire, NM, kitty, шрифты и т.д.) одним pacman-ом
+2. раскладывает конфиги в `~/.config` (старые бэкапит)
+3. докачивает обои из upstream (они тяжёлые, в репо не тяну)
+4. настраивает ydotool и группу `input` для жестов
 
-Логин: в `~/.zprofile` строка `exec Hyprland` (Hyprland стартует с tty1). Показ клавиш райса — `SUPER + /`.
+Логин: `exec Hyprland` в `~/.zprofile`. Шпаргалка по клавишам — `SUPER + /`.
+
+## Благодарности
+
+Вся база — [Jack02134x](https://github.com/Jack02134x) и его [Prism](https://github.com/Jack02134x/prism-shell). Спасибо за проделанную работу, я лишь докрутил под себя.
