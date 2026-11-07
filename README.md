@@ -1,6 +1,6 @@
 # rice
 
-Hyprland-райс: [Prism](https://github.com/Jack02134x/prism-shell) (quickshell) с моими правками + конфиги.
+Hyprland-райс: **форк [Prism](https://github.com/Jack02134x/prism-shell)** (quickshell-шелл для Hyprland) с моими правками + мои конфиги поверх. Полный список отличий — [ниже](#отличия-от-ванильного-prism).
 
 ## Превью
 
