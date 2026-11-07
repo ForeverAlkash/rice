@@ -140,11 +140,10 @@ Flickable {
             }
         }
 
-        // toggles
+        // toggles — same layout as the dashboard Home tab
         GridLayout {
             Layout.fillWidth: true
-            columns: 3
-            rowSpacing: 8
+            columns: 2
             columnSpacing: 8
 
             QuickTile {
@@ -167,33 +166,12 @@ Flickable {
                 onClicked: BT.toggle()
                 onRightClicked: Panels.openDashboard(4)
             }
-            QuickTile {
-                Layout.fillWidth: true
-                icon: Notifs.dnd ? "bell_sleep" : "bell"
-                label: "Silence"
-                sub: Notifs.dnd ? "DND on" : "Off"
-                checked: Notifs.dnd
-                accent: Theme.primary
-                onClicked: Notifs.dnd = !Notifs.dnd
-            }
-            QuickTile {
-                Layout.fillWidth: true
-                icon: Toggles.caffeine ? "coffee" : "coffee_outline"
-                label: "Caffeine"
-                sub: Toggles.caffeine ? "Awake" : "Off"
-                checked: Toggles.caffeine
-                accent: Theme.primary
-                onClicked: Toggles.toggleCaffeine()
-            }
-            QuickTile {
-                Layout.fillWidth: true
-                icon: "notebook"
-                label: "Notes"
-                sub: Toggles.notes ? "Open" : "Closed"
-                checked: Toggles.notes
-                accent: Theme.primary
-                onClicked: Toggles.toggleNotes()
-            }
+        }
+        GridLayout {
+            Layout.fillWidth: true
+            columns: 3
+            columnSpacing: 8
+
             QuickTile {
                 Layout.fillWidth: true
                 icon: Power.profileIcon
@@ -214,6 +192,44 @@ Flickable {
             }
             QuickTile {
                 Layout.fillWidth: true
+                icon: Toggles.caffeine ? "coffee" : "coffee_outline"
+                label: "Caffeine"
+                sub: Toggles.caffeine ? "Awake" : "Off"
+                checked: Toggles.caffeine
+                accent: Theme.primary
+                onClicked: Toggles.toggleCaffeine()
+            }
+        }
+        GridLayout {
+            Layout.fillWidth: true
+            columns: 2
+            columnSpacing: 8
+
+            QuickTile {
+                Layout.fillWidth: true
+                icon: Audio.micIcon
+                label: "Microphone"
+                sub: Audio.micMuted ? "Muted" : "Live"
+                checked: !Audio.micMuted
+                accent: Theme.primary
+                onClicked: Audio.toggleMic()
+            }
+            QuickTile {
+                Layout.fillWidth: true
+                icon: "speaker"
+                label: "Output"
+                sub: Audio.shortName(Audio.sink)
+                accent: Theme.primary
+                onClicked: Audio.cycleSink()
+            }
+        }
+        GridLayout {
+            Layout.fillWidth: true
+            columns: 3
+            columnSpacing: 8
+
+            QuickTile {
+                Layout.fillWidth: true
                 icon: "weather_night"
                 label: "Warm"
                 sub: Toggles.warm ? "On" : "Off"
@@ -223,37 +239,21 @@ Flickable {
             }
             QuickTile {
                 Layout.fillWidth: true
-                icon: Focus.working ? "timer_outline" : Focus.active ? "coffee" : "timer_outline"
-                label: Focus.active ? Focus.label : "Focus"
-                sub: Focus.active ? Focus.leftText + (Focus.paused ? " paused" : "") : Config.focus.workMinutes + " min"
-                checked: Focus.active
-                accent: Theme.primary
-                onClicked: Focus.active ? Focus.pause() : Focus.start()
-                onRightClicked: Focus.stop()
-            }
-            QuickTile {
-                Layout.fillWidth: true
-                icon: "tune_variant"
-                label: "EasyEffects"
-                sub: Toggles.easyEffects ? "Running" : "Off"
-                checked: Toggles.easyEffects
-                accent: Theme.primary
-                onClicked: Toggles.toggleEasyEffects()
-            }
-            QuickTile {
-                Layout.fillWidth: true
-                icon: "dock_window"
-                label: "Windows"
-                sub: Hypr.toplevels.length + " open"
-                accent: Theme.primary
-                onClicked: Panels.show("switcher")
+                icon: "record_rec"
+                label: "Record"
+                sub: Toggles.recording ? "Recording…" : "Region"
+                checked: Toggles.recording
+                accent: "#ff5a6a"
+                onClicked: {
+                    Panels.closeAll();
+                    Toggles.toggleRecording();
+                }
             }
             QuickTile {
                 Layout.fillWidth: true
                 icon: "monitor_screenshot"
-                label: "Capture"
-                sub: Toggles.recording ? "Recording…" : "Menu"
-                checked: Toggles.recording
+                label: "Screenshot"
+                sub: "Menu"
                 accent: Theme.primary
                 onClicked: Panels.show("screenshot")
             }
