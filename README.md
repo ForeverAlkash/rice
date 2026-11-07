@@ -2,6 +2,27 @@
 
 Hyprland-райс: [Prism](https://github.com/Jack02134x/prism-shell) (quickshell) с моими правками + конфиги.
 
+## Превью
+
+**Dashboard** (SUPER + D) — плеер, погода, скринтайм, тумблеры:
+
+![dashboard](screenshots/dashboard.png)
+
+**Обои** (matugen красит kitty/GTK/QT/bar от обоев):
+
+![wallpapers](screenshots/wallpapers.png)
+
+**Lock** и **exit**:
+
+<p align="center">
+  <img src="screenshots/lock.png" width="49%">
+  <img src="screenshots/exit.png" width="49%">
+</p>
+
+**Бар** над приложениями (Spotify):
+
+![spotify](screenshots/spotify.png)
+
 ## Что внутри
 
 - `hypr/` — hyprland.lua (Prism starter, Lua-конфиг) + скрипты

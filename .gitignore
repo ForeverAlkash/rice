@@ -18,6 +18,7 @@
 !/user-dirs.dirs
 !/QtProject.conf
 !/.gitignore
+!/screenshots/
 !/install.sh
 !/README.md
 
