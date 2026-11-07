@@ -23,6 +23,30 @@ Hyprland-райс: [Prism](https://github.com/Jack02134x/prism-shell) (quickshel
 
 ![spotify](screenshots/spotify.png)
 
+## Отличия от ванильного [Prism](https://github.com/Jack02134x/prism-shell)
+
+**Убрано:**
+- floating clock (Chrono) и вся его IPC/таймерная обвязка — часы переделаны на чистый quickshell
+- study noise (brown/pink/white noise через ffplay) и его роль в Pomodoro (Focus) — остались только паузы и DND
+- GLava (десктопный визуализатор)
+- KDE Connect / Phone: карточка телефона, «Find my phone» и связанные иконки
+
+**Добавлено:**
+- **AI в лаунчере** — префикс `q ` шлёт вопрос локальной модели через Ollama (модель, URL и системный промпт настраиваются в `config.json` → `ai`)
+- **Updates** — счётчик pacman-обновлений: бейдж на кнопке в шторке управления, чип в дашборде, клик = refresh
+- **Audio Output switcher** — переключение наушники/спикеры/монитор с фильтрацией джеков (`Audio.cycleSink`)
+- **Screenshot menu** (`ScreenshotMenu.qml`) — панель выбора вместо мгновенного сниппета
+- **Notes** — скретчпад: плавающий kitty с markdown-файлом в state-директории
+- **Warm screen** — тёплый экран через hyprsunset, состояние сохраняется между рестартами шелла
+
+**Изменено:**
+- монохромная тема: разноцветные `accent(N)` в дашборде/настройках заменены на единый `primary`
+- лаунчер: hover двигает выделение только после реального движения мыши (`mouseArmed`), новый скоринг поиска (`bestScore`), убраны цифровые шорткаты 1–5
+- lock screen: компактнее (шрифт 105 вместо 210, свои отступы маски), аватар берётся из `MyAvatar/`
+- `prism.lua`: автостарт Bluetooth-агента (`bt-agent`, чтобы наушники не отваливались на passkey), исправлен контроль cliphist-вечеров (`pgrep -ax` вместо `pgrep -f`), Throne на `special:magic`, Telegram на workspace 3
+
+**Свои конфиги поверх:** `hypr/hyprland.lua`, `libinput-gestures.conf` (свайпы → mouse4/5), qt6ct/kdeglobals, dolphinrc, mimeapps.list.
+
 ## Что внутри
 
 - `hypr/` — hyprland.lua (Prism starter, Lua-конфиг) + скрипты
