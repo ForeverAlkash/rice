@@ -26,3 +26,8 @@
 *.bak-*
 __pycache__/
 quickshell/wallpapers/
+
+# runtime шелла
+quickshell/.cache/
+quickshell/.state/
+quickshell/config.json

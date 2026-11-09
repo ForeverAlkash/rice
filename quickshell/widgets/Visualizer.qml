@@ -17,20 +17,14 @@ Item {
     property bool rainbow: true
     property color color: Theme.primary
     property real radius: -1
-    // request 60 fps from cava while visible (large visualizers)
-    property bool hifi: false
     readonly property bool live: visible && opacity > 0
 
     property bool registered: false
-    property bool registeredHifi: false
     onLiveChanged: reg()
-    onHifiChanged: reg()
     Component.onCompleted: reg()
     Component.onDestruction: {
         if (registered)
             Cava.consumers--;
-        if (registeredHifi)
-            Cava.hifiConsumers--;
     }
     function reg() {
         if (live && !registered) {
@@ -39,14 +33,6 @@ Item {
         } else if (!live && registered) {
             Cava.consumers--;
             registered = false;
-        }
-        const wantHifi = live && hifi;
-        if (wantHifi && !registeredHifi) {
-            Cava.hifiConsumers++;
-            registeredHifi = true;
-        } else if (!wantHifi && registeredHifi) {
-            Cava.hifiConsumers--;
-            registeredHifi = false;
         }
     }
 

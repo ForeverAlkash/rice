@@ -229,6 +229,10 @@ Item {
                             pixelSize: 12
                             weight: Font.DemiBold
                             color: Theme.fg
+                            // scrolling repaints the island every frame — only on hover
+                            hoverOnly: true
+                            hovered: compactHover.hovered
+                            HoverHandler { id: compactHover }
                         }
                         Visualizer {
                             Layout.preferredWidth: 46
@@ -308,6 +312,9 @@ Item {
                                 pixelSize: 17
                                 weight: Font.Bold
                                 color: Theme.fg
+                                hoverOnly: true
+                                hovered: expandedHover.hovered
+                                HoverHandler { id: expandedHover }
                             }
                             Txt {
                                 Layout.fillWidth: true
@@ -631,10 +638,12 @@ Item {
                     Panels.toggle("sidebar");
                 else if (root.mode === "notif")
                     Panels.show("sidebar");
+                else if (root.mode === "idle")
+                    Chrono.show("");
                 else if (Panels.dashboard)
                     Panels.dashboard = false;
                 else
-                    Panels.openDashboard(0);
+                    Panels.openDashboard("Home");
             }
         }
         WheelHandler {
@@ -644,7 +653,7 @@ Item {
 
     SystemClock {
         id: clock
-        precision: SystemClock.Seconds
+        precision: SystemClock.Minutes
     }
 
     // cross-fading content layer

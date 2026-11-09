@@ -132,7 +132,7 @@ Singleton {
     }
 
     Timer {
-        interval: 5000
+        interval: 15000
         repeat: true
         running: true
         onTriggered: status.reload()

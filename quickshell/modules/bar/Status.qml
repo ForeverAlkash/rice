@@ -139,7 +139,7 @@ RowLayout {
         iconSize: 16
         iconColor: Net.connected ? Theme.fg : Theme.fgDim
         tooltip: Net.name + (Net.active ? " · " + Math.round(Net.strength * 100) + "%" : "")
-        onClicked: mouse => mouse.button === Qt.RightButton ? Net.toggleWifi() : Panels.openDashboard(4)
+        onClicked: mouse => mouse.button === Qt.RightButton ? Net.toggleWifi() : Panels.openDashboard("Network")
     }
 
     IconBtn {
@@ -149,7 +149,7 @@ RowLayout {
         iconSize: 16
         iconColor: BT.connected.length > 0 ? Theme.accent(6) : BT.enabled ? Theme.fg : Theme.fgDim
         tooltip: "Bluetooth · " + BT.summary
-        onClicked: mouse => mouse.button === Qt.RightButton ? BT.toggle() : Panels.openDashboard(4)
+        onClicked: mouse => mouse.button === Qt.RightButton ? BT.toggle() : Panels.openDashboard("Network")
     }
 
     IconBtn {
@@ -158,7 +158,7 @@ RowLayout {
         iconSize: 16
         iconColor: Audio.muted ? Theme.error : Theme.fg
         tooltip: Audio.muted ? "Muted" : "Volume " + Math.round(Audio.volume * 100) + "% · scroll to change"
-        onClicked: mouse => mouse.button === Qt.RightButton ? Panels.openDashboard(5) : Audio.toggleMute()
+        onClicked: mouse => mouse.button === Qt.RightButton ? Panels.openDashboard("Audio") : Audio.toggleMute()
         onWheel: event => Audio.nudge(event.angleDelta.y > 0 ? 0.05 : -0.05)
     }
 
@@ -253,7 +253,7 @@ RowLayout {
         }
         TapHandler {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onTapped: (p, button) => button === Qt.RightButton ? Panels.openDashboard(2) : Power.cycleProfile()
+            onTapped: (p, button) => button === Qt.RightButton ? Panels.openDashboard("System") : Power.cycleProfile()
         }
         Tip {
             text: Power.percent + "% · " + Power.statusText + " · " + Power.profileName + " (click to cycle)"

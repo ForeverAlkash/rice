@@ -16,13 +16,12 @@ Singleton {
     }
 
     readonly property var list: [
-        { name: "Dashboard", desc: "Overview, media, weather, stats", icon: "view_dashboard", kw: "home control center", run: () => Panels.openDashboard(0) },
-        { name: "Now Playing", desc: "Big media view with visualizer", icon: "music", kw: "music player spotify", run: () => Panels.openDashboard(1) },
-        { name: "System Monitor", desc: "CPU, memory, GPU, network", icon: "chart_areaspline", kw: "cpu ram gpu stats htop", run: () => Panels.openDashboard(2) },
-        { name: "Screen Time", desc: "Today's usage from your tracker", icon: "timer_outline", kw: "usage hours apps", run: () => Panels.openDashboard(3) },
-        { name: "Wi-Fi & Bluetooth", desc: "Networks and devices", icon: "wifi", kw: "network bluetooth connect", run: () => Panels.openDashboard(4) },
-        { name: "Audio Mixer", desc: "Outputs, inputs, per-app volume", icon: "tune_variant", kw: "volume sound mixer speaker", run: () => Panels.openDashboard(5) },
-        { name: "Shell Settings", desc: "Toggle Prism features", icon: "cog", kw: "config preferences prism", run: () => Panels.openDashboard(6) },
+        { name: "Dashboard", desc: "Overview, media, weather, stats", icon: "view_dashboard", kw: "home control center", run: () => Panels.openDashboard("Home") },
+        { name: "System Monitor", desc: "CPU, memory, GPU, network", icon: "chart_areaspline", kw: "cpu ram gpu stats htop", run: () => Panels.openDashboard("System") },
+        { name: "Screen Time", desc: "Today's usage from your tracker", icon: "timer_outline", kw: "usage hours apps", run: () => Panels.openDashboard("Screen") },
+        { name: "Wi-Fi & Bluetooth", desc: "Networks and devices", icon: "wifi", kw: "network bluetooth connect", run: () => Panels.openDashboard("Network") },
+        { name: "Audio Mixer", desc: "Outputs, inputs, per-app volume", icon: "tune_variant", kw: "volume sound mixer speaker", run: () => Panels.openDashboard("Audio") },
+        { name: "Shell Settings", desc: "Toggle Prism features", icon: "cog", kw: "config preferences prism", run: () => Panels.openDashboard("Settings") },
         { name: "Notification Center", desc: "Right drawer: history, calendar, DND", icon: "bell", kw: "notifications dnd sidebar", run: () => Panels.show("sidebar") },
         { name: "Control Drawer", desc: "Left drawer: sliders and toggles", icon: "dock_left", kw: "quick settings controls", run: () => Panels.show("controls") },
         { name: "Workspace Overview", desc: "All workspaces with live previews", icon: "view_grid", kw: "expose windows", run: () => Panels.show("overview") },

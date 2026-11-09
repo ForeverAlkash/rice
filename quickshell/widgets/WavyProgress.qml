@@ -22,7 +22,7 @@ Item {
     implicitWidth: 200
 
     Timer {
-        interval: 33
+        interval: 50
         repeat: true
         running: root.playing && root.visible
         onTriggered: {

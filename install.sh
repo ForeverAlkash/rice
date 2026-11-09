@@ -7,7 +7,8 @@
 #   1. checks: Arch, not root
 #   2. one pacman transaction: Hyprland, Quickshell, matugen, PipeWire, NetworkManager,
 #      kitty, thunar, fonts, icons, easyeffects, cava, btop, fastfetch, mpv, gestures
-#   3. copies the configs from this repo into ~/.config (existing files backed up)
+#   3. copies the configs from this repo into ~/.config (existing files backed up),
+#      seeds config.json and the pam config for the lock screen
 #   4. wallpapers (~/.config/quickshell/wallpapers) from upstream prism-shell if missing
 #   5. ydotool daemon + input group for touchpad swipe gestures
 #
@@ -40,7 +41,7 @@ PKGS=(
     matugen awww cava
     wl-clipboard cliphist grim slurp wf-recorder hyprpicker
     brightnessctl playerctl imagemagick ffmpeg ffmpegthumbnailer
-    hyprlock libnotify curl git python
+    hyprlock hyprsunset libnotify curl git python
     # looks
     ttf-nerd-fonts-symbols ttf-jetbrains-mono-nerd ttf-roboto adwaita-fonts
     noto-fonts noto-fonts-emoji noto-fonts-cjk
@@ -73,6 +74,38 @@ copy() { # $1 = relative path in repo
 }
 for d in hypr quickshell matugen kitty gtk-3.0 gtk-4.0 qt6ct cava btop fastfetch easyeffects; do copy "$d"; done
 for f in libinput-gestures.conf kdeglobals dolphinrc mimeapps.list user-dirs.dirs QtProject.conf; do copy "$f"; done
+
+# ------------------------------------------------------------- config.json --
+# config.json is gitignored, so a fresh clone ships without it. Seed one so
+# the wallpaper picker points at the wallpapers this repo carries and the
+# lock screen avatar matches.
+if [[ ! -f $CFG/quickshell/config.json ]]; then
+    python3 - "$CFG" <<'PY'
+import json, sys, pathlib
+cfg = pathlib.Path(sys.argv[1]) / "quickshell"
+data = {
+    "apps": {"browser": "firefox", "editor": "code", "files": "thunar", "terminal": "kitty"},
+    "user": {"avatar": str(cfg / "MyAvatar" / "lilith.jpeg")},
+    "wallpaper": {"copyTo": str(cfg / ".state" / "wallpaper"),
+                  "dir": str(cfg / "wallpapers")}
+}
+cfg.mkdir(parents=True, exist_ok=True)
+(cfg / "config.json").write_text(json.dumps(data, indent=4))
+PY
+    ok "config.json (seed)"
+fi
+
+# -------------------------------------------------------------------- pam ----
+# the lock screen's password path uses its own pam config; the hyprlock
+# package ships one for hyprlock but not for hyprlock-password
+if [[ ! -f /etc/pam.d/hyprlock-password ]]; then
+    sudo tee /etc/pam.d/hyprlock-password >/dev/null <<'PAM'
+# password-only auth for the Prism lock screen
+auth        required    pam_unix.so
+account     required    pam_unix.so
+PAM
+    ok "pam: /etc/pam.d/hyprlock-password"
+fi
 
 # ---------------------------------------------------------------- wallpaper --
 if [[ ! -d $CFG/quickshell/wallpapers || -z $(ls -A "$CFG/quickshell/wallpapers" 2>/dev/null) ]]; then

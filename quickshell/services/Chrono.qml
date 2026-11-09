@@ -32,9 +32,9 @@ Singleton {
             groups: [], // {id, name, tone}
             cities: [], // time zone names
             timer: { status: "idle", end: 0, remaining: 0, total: 0, digits: "" },
-            iv: { steps: [{ name: "Work", secs: 40 }, { name: "Rest", secs: 20 }], loops: 3, presets: [], status: "idle", runSteps: [], runStart: 0, elapsedPause: 0 },
+            iv: { steps: [{ name: "Work", secs: 2400 }, { name: "Rest", secs: 1200 }], loops: 3, presets: [], status: "idle", runSteps: [], runStart: 0, elapsedPause: 0 },
             sw: { running: false, start: 0, acc: 0, laps: [] },
-            win: { open: false, x: -1, y: -1, mini: false, pinWs: 0, screen: "", tab: "clock", tmode: "timer", openGroups: [] }
+            win: { open: false, x: -1, y: -1, mini: false, pinWs: 0, screen: "", tab: "timer", tmode: "timer", openGroups: [] }
         };
     }
 
@@ -65,23 +65,27 @@ Singleton {
     }
 
     // ---- window ----
+    // the clock surface is a Panels overlay now (ClockPanel); mini still
+    // shrinks it to the little pill
     function show(tab) {
         if (tab)
             setTab(tab);
-        d.win.open = true;
         d.win.mini = false;
-        touch();
+        Panels.show("clock");
     }
     function hide() {
-        d.win.open = false;
+        Panels.clock = false;
         touch();
     }
     function toggle() {
-        d.win.open ? hide() : show("");
+        Panels.toggle("clock");
     }
     function setTab(tab) {
         const map = { alarms: "alarm", alarm: "alarm", clock: "clock", timer: "timer", stopwatch: "stopwatch", intervals: "timer", settings: d.win.tab };
-        d.win.tab = map[tab] ?? "clock";
+        d.win.tab = map[tab] ?? "timer";
+        // only the two surviving tabs are valid
+        if (d.win.tab !== "timer" && d.win.tab !== "stopwatch")
+            d.win.tab = "timer";
         if (tab === "intervals")
             d.win.tmode = "interval";
         touch();
@@ -484,8 +488,16 @@ Singleton {
         const a = r.kind === "alarm" ? alarmById(r.id) : null;
         const g = a && a.group ? groupById(a.group) : null;
         playLoop((a && a.tone) || (g && g.tone) || d.settings.tone);
-        silencer.interval = Math.max(1, d.settings.silence) * 60000;
+        // ring for at most 15 s — a looping tone with no visible stop is a bug,
+        // not a feature; the user's "silence after" minutes can only shorten it
+        silencer.interval = Math.min(Math.max(1, d.settings.silence) * 60000, 15000);
         silencer.restart();
+        // the island IS the ring UI: it surfaces through the notification
+        // manager like every other alert (same slide, same Stop / Snooze)
+        Notifs.local(r.title, r.sub, r.kind === "alarm" ? "alarm" : "timer_sand_complete", 2, "", [
+            { text: r.kind === "alarm" ? "Snooze " + d.settings.snooze + "m" : "+ 1 min", run: () => root.snooze() },
+            { text: "Stop", run: () => root.stopRinging() }
+        ]);
     }
     function stopRinging() {
         ring = null;
@@ -734,6 +746,9 @@ Singleton {
             migrate(s, out); // the old Python clock's file
         }
         out.win.open = false;
+        // only Timer and Stopwatch survive in this fork
+        if (out.win.tab !== "timer" && out.win.tab !== "stopwatch")
+            out.win.tab = "timer";
         d = out;
         const t = Date.now();
         for (const a of d.alarms)

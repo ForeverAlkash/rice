@@ -61,7 +61,7 @@ RowLayout {
                 cursorShape: Qt.PointingHandCursor
             }
             TapHandler {
-                onTapped: Panels.openDashboard(2)
+                onTapped: Panels.openDashboard("System")
             }
             Tip {
                 text: stat.modelData.tip

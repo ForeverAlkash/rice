@@ -25,6 +25,29 @@ Singleton {
         return h > 0 ? h + ":" + pad2(m) + ":" + pad2(s) : m + ":" + pad2(s);
     }
 
+    // seconds -> "0:04:59" (always shows hours)
+    function hms(sec) {
+        if (!isFinite(sec) || sec < 0)
+            sec = 0;
+        sec = Math.floor(sec);
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        return h + ":" + pad2(m) + ":" + pad2(s);
+    }
+
+    // milliseconds -> "1:02:33.45" (stopwatch / precise countdowns)
+    function hmsc(ms) {
+        if (!isFinite(ms) || ms < 0)
+            ms = 0;
+        ms = Math.floor(ms);
+        const h = Math.floor(ms / 3600000);
+        const m = Math.floor(ms / 60000) % 60;
+        const s = Math.floor(ms / 1000) % 60;
+        const c = Math.floor(ms / 10) % 100;
+        return h + ":" + pad2(m) + ":" + pad2(s) + "." + pad2(c);
+    }
+
     // seconds -> "5h 12m" / "12m" / "40s"
     function human(sec) {
         sec = Math.max(0, Math.round(sec));

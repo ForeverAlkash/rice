@@ -15,9 +15,9 @@ Singleton {
     property real level: 0 // smoothed overall loudness 0..1
     property real bass: 0
     property int consumers: 0
-    // big visualizers ask for 60 fps; the bar island is happy with 30
-    property int hifiConsumers: 0
-    readonly property int fps: hifiConsumers > 0 ? 60 : 30
+    // 30 fps is plenty for spectrum bars; 60 doubled the parse and repaint
+    // cost for barely visible smoothness
+    readonly property int fps: 30
     readonly property bool active: consumers > 0 && Media.playing
     property int frame: 0
     onFpsChanged: if (proc.running) {

@@ -10,16 +10,30 @@ ColumnLayout {
     id: root
 
     property var win
-    property real ms: Chrono.swElapsed
+    // live value while running; when stopped or reset it follows swElapsed,
+    // so Reset actually snaps the display to 0:00:00.00
+    property real frameMs: Chrono.swElapsed
+    readonly property real ms: Chrono.swRunning ? frameMs : Chrono.swElapsed
+    Connections {
+        target: Chrono
+        function onSwRunningChanged() {
+            // sync on start (resume from the right spot) and on stop/reset (snap to the result)
+            root.frameMs = Chrono.swElapsed;
+        }
+    }
     readonly property var laps: Chrono.d.sw.laps
     readonly property real best: laps.length > 1 ? Math.min(...laps.map(l => l.split)) : -1
     readonly property real worst: laps.length > 1 ? Math.max(...laps.map(l => l.split)) : -1
 
     spacing: 14
 
-    FrameAnimation {
+    // 20 fps is plenty for the centisecond digits and costs ~7x less than
+    // a per-frame animation on the 144 Hz panel
+    Timer {
+        interval: 50
         running: root.visible && Chrono.swRunning
-        onTriggered: root.ms = Chrono.d.sw.acc + Date.now() - Chrono.d.sw.start
+        repeat: true
+        onTriggered: root.frameMs = Chrono.d.sw.acc + Date.now() - Chrono.d.sw.start
     }
 
     Item {
@@ -115,3 +129,6 @@ ColumnLayout {
         }
     }
 }
+
+
+

@@ -5,33 +5,31 @@ import qs.services
 import qs.widgets
 
 // The clock shrunk to a pill: whatever is running (timer, intervals,
-// stopwatch), else the time. Drag it anywhere; double-click to expand.
+// stopwatch), else the time. Tap expands it into the clock panel.
 Item {
     id: root
 
-    property var win
-
     // stopwatch centiseconds while it runs
     property real swMs: Chrono.swElapsed
-    FrameAnimation {
+    Timer {
+        interval: 50
         running: root.visible && Chrono.swRunning && root.what === "sw"
+        repeat: true
         onTriggered: root.swMs = Chrono.d.sw.acc + Date.now() - Chrono.d.sw.start
     }
 
     readonly property string what: Chrono.ringing ? "ring" : (Chrono.timerRunning || Chrono.timerPaused) ? "timer" : (Chrono.ivRunning || Chrono.ivPaused) ? "iv" : (Chrono.swRunning || Chrono.d.sw.acc > 0) ? "sw" : "clock"
-    readonly property var iv: what === "iv" ? Chrono.ivState() : null
+    readonly property var iv: what === "iv" ? (Chrono.ivState() ?? { left: 0, step: { name: "" } }) : null
     readonly property var shown: new Date(Chrono.now + Chrono.fastOffset())
 
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-        onPressed: m => root.win.dragStart(m)
-        onPositionChanged: m => root.win.dragMove(m)
-        onReleased: root.win.dragEnd()
-        onDoubleClicked: {
-            Chrono.d.win.mini = false;
-            Chrono.touch();
-        }
+    function expand() {
+        Chrono.d.win.mini = false;
+        Panels.show("clock");
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onDoubleTapped: root.expand()
     }
 
     RowLayout {
@@ -55,10 +53,8 @@ Item {
                     Chrono.ivPause();
                 else if (root.what === "sw")
                     Chrono.swToggle();
-                else {
-                    Chrono.d.win.mini = false;
-                    Chrono.setTab("alarm");
-                }
+                else
+                    root.expand();
             }
         }
         ColumnLayout {
@@ -83,16 +79,16 @@ Item {
             icon: "arrow_expand"
             size: 30
             tooltip: "Expand"
-            onClicked: {
-                Chrono.d.win.mini = false;
-                Chrono.touch();
-            }
+            onClicked: root.expand()
         }
         IconBtn {
             icon: "close"
             size: 30
-            tooltip: "Close"
-            onClicked: Chrono.hide()
+            tooltip: "Hide the pill"
+            onClicked: {
+                Chrono.d.win.mini = false;
+                Chrono.touch();
+            }
         }
     }
 }

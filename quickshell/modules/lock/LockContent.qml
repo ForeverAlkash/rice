@@ -36,12 +36,33 @@ Item {
             return;
         busy = true;
         error = "";
-        pam.start();
+        // Finger and password run as separate PAM conversations so that
+        // the fingerprint wait never blocks the password path.
+        pamFinger.abort();
+        pamPassword.start();
     }
 
     PamContext {
-        id: pam
+        id: pamFinger
         config: Config.lock.pamConfig
+        // Start the conversation right away so pam_fprintd polls the
+        // fingerprint sensor while the password field is still empty.
+        Component.onCompleted: if (!root.preview)
+            start()
+        onPamMessage: {}
+        onCompleted: result => {
+            if (result === PamResult.Success) {
+                root.busy = false;
+                pw.text = "";
+                root.unlocked();
+            }
+        }
+        onError: {}
+    }
+
+    PamContext {
+        id: pamPassword
+        config: "hyprlock-password"
         onPamMessage: {
             if (responseRequired)
                 respond(pw.text);
@@ -55,12 +76,14 @@ Item {
                 root.error = "Wrong password";
                 pw.text = "";
                 shake.restart();
+                pamFinger.start();
             }
         }
         onError: err => {
             root.busy = false;
             root.error = "Authentication error";
             shake.restart();
+            pamFinger.start();
         }
     }
 

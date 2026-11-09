@@ -106,7 +106,31 @@ Card {
                 font.pixelSize: 13
                 color: Theme.primary
             }
-            Item { Layout.fillHeight: true }
+
+            // dynamic filler: the cover grows with whatever height the Home
+            // layout gives the card (or a dim note when there is no art)
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                Image {
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    visible: Media.art !== ""
+                    source: Media.art
+                    fillMode: Image.PreserveAspectFit
+                    asynchronous: true
+                    sourceSize.height: 512
+                }
+                Icon {
+                    anchors.centerIn: parent
+                    visible: Media.art === ""
+                    icon: Media.hasPlayer ? "music_note" : "music_off"
+                    size: Math.min(72, Math.max(24, parent.height - 8))
+                    color: Theme.alpha(Theme.fg, 0.25)
+                }
+            }
+
             WavyProgress {
                 Layout.fillWidth: true
                 value: Media.progress

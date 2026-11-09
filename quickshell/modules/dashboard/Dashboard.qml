@@ -2,7 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Shapes
 import Quickshell
+import Quickshell.Widgets
 import qs.common
 import qs.services
 import qs.widgets
@@ -20,7 +22,6 @@ Overlay {
 
     readonly property var tabs: [
         { name: "Home", icon: "view_dashboard", src: "HomeTab.qml" },
-        { name: "Media", icon: "music", src: "MediaTab.qml" },
         { name: "System", icon: "chart_areaspline", src: "SystemTab.qml" },
         { name: "Screen", icon: "timer_outline", src: "ScreenTimeTab.qml" },
         { name: "Network", icon: "wifi", src: "NetworkTab.qml" },
@@ -29,6 +30,8 @@ Overlay {
     ]
     property int tab: Panels.dashboardTab
     property int prevTab: 0
+    // Home tab instance (for the corner edit-mode toggle below)
+    readonly property var homeTab: tabsRep.count > 0 ? tabsRep.itemAt(0)?.item ?? null : null
     onTabChanged: Panels.dashboardTab = tab
 
     Connections {
@@ -62,7 +65,7 @@ Overlay {
                 win.go(win.tab + 1);
             else if (event.key === Qt.Key_Left || event.key === Qt.Key_Up)
                 win.go(win.tab - 1);
-            else if (event.key >= Qt.Key_1 && event.key <= Qt.Key_7)
+            else if (event.key >= Qt.Key_1 && event.key <= Qt.Key_6)
                 win.go(event.key - Qt.Key_1);
             else
                 return;
@@ -181,6 +184,7 @@ Overlay {
                     clip: true
 
                     Repeater {
+                        id: tabsRep
                         model: win.tabs
                         Loader {
                             id: page
@@ -203,6 +207,65 @@ Overlay {
                             onLoaded: item.active = Qt.binding(() => page.current && win.open)
                         }
                     }
+                }
+            }
+
+            // ---- edit-mode toggle for the Home tab: a diagonal ribbon ----
+            // ---- across the panel corner (the pencil button)          ----
+            // The stripe is drawn as a polygon cut flush by both edges —
+            // no clipping tricks. Corner box: S=120, crossings 40px from
+            // the corner, band half-width 15 (k = 15·√2 ≈ 21.2).
+            Item {
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                width: 120
+                height: 120
+                visible: win.tab === 0 && win.homeTab !== null
+
+                Shape {
+                    anchors.fill: parent
+                    antialiasing: true
+                    ShapePath {
+                        strokeWidth: -1
+                        fillColor: win.homeTab?.editing ? Theme.primaryFixed : Theme.primary
+                        Behavior on fillColor { ColAnim { duration: Motion.normal } }
+                        // stripe hugs the rounded corner (r = 28): straight edge,
+                        // arc around the corner tip, straight edge, then the
+                        // band's far boundary back (c = 28, k = 21.2)
+                        PathMove { x: 120; y: 70.8 }
+                        PathLine { x: 120; y: 92 }
+                        PathArc { x: 92; y: 120; radiusX: 28; radiusY: 28; direction: PathArc.Clockwise }
+                        PathLine { x: 70.8; y: 120 }
+                        PathLine { x: 120; y: 70.8 }
+                    }
+                }
+
+                Icon {
+                    x: 104 - width / 2
+                    y: 104 - height / 2
+                    icon: win.homeTab?.editing ? "check" : "pencil"
+                    size: 15
+                    color: Theme.on(win.homeTab?.editing ? Theme.primaryFixed : Theme.primary)
+                }
+
+                // invisible rotated hit area matching the stripe
+                MouseArea {
+                    id: ribbonTap
+                    width: 172
+                    height: 42
+                    rotation: -45
+                    x: 104 - width / 2
+                    y: 104 - height / 2
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: if (win.homeTab)
+                        win.homeTab.editing = !win.homeTab.editing
+                }
+
+                Tip {
+                    above: true
+                    text: "Customize widgets"
+                    show: ribbonTap.containsMouse && !(win.homeTab?.editing ?? false)
                 }
             }
         }

@@ -12,6 +12,7 @@ import qs.services
 import qs.widgets
 import qs.modules.bar
 import qs.modules.cheatsheet
+import qs.modules.clock
 import qs.modules.corners
 import qs.modules.dashboard
 import qs.modules.drawers
@@ -60,6 +61,14 @@ ShellRoot {
     LazyPanel { want: Panels.power; PowerMenu {} }
     Lock {}
 
+    // the clock: panel (slides from under the bar) + the mini pill
+    Loader {
+        source: "modules/clock/ClockPanel.qml"
+    }
+    Loader {
+        source: "modules/clock/ClockPill.qml"
+    }
+
     LazyLoader {
         active: Config.polkit.enabled
         PolkitDialog {}
@@ -77,4 +86,10 @@ ShellRoot {
         Focus.active;
         Idle.active;
     }
+
+
+
 }
+
+
+

@@ -23,11 +23,12 @@ Singleton {
     property bool record: false
     property bool edit: false
     property bool switcher: false
+    property bool clock: false
     // true while grim/slurp/hyprpicker run: every Prism surface hides instantly
     property bool capturing: false
 
-    readonly property var names: ["launcher", "dashboard", "sidebar", "controls", "power", "overview", "wallpapers", "screenshot", "cheatsheet", "record", "edit", "switcher"]
-    readonly property bool anyOpen: launcher || dashboard || sidebar || controls || power || overview || wallpapers || screenshot || cheatsheet || record || edit || switcher
+    readonly property var names: ["launcher", "dashboard", "sidebar", "controls", "power", "overview", "wallpapers", "screenshot", "cheatsheet", "record", "edit", "switcher", "clock"]
+    readonly property bool anyOpen: launcher || dashboard || sidebar || controls || power || overview || wallpapers || screenshot || cheatsheet || record || edit || switcher || clock
 
     readonly property var focusedScreen: {
         const name = Hyprland.focusedMonitor?.name ?? "";
@@ -67,8 +68,13 @@ Singleton {
         show("launcher");
     }
 
+    // tab: a tab name ("System", "Audio", …) — indices shift when tabs change
+    readonly property var dashboardTabNames: ["Home", "System", "Screen", "Network", "Audio", "Settings"]
     function openDashboard(tab) {
-        if (tab !== undefined)
+        if (typeof tab === "string") {
+            const i = dashboardTabNames.indexOf(tab);
+            dashboardTab = i >= 0 ? i : 0;
+        } else if (tab !== undefined)
             dashboardTab = tab;
         show("dashboard");
     }

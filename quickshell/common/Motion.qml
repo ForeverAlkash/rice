@@ -29,8 +29,8 @@ Singleton {
     readonly property bool ambient: Config.fx.ambient && !calm && (Config.fx.ambientOnBattery || !UPower.onBattery)
 
     // Looping 0..1 phase shared by every ambient effect (gradient borders,
-    // aurora, orb). It ticks at ~30 fps instead of the 144 Hz panel rate, so
-    // slow ambient motion stays smooth but cheap.
+    // aurora, orb). It ticks at ~20 fps instead of the 144 Hz panel rate, so
+    // slow ambient motion (24 s period) stays smooth but cheap.
     readonly property real period: 24000
     property real t: 0
     // while cava runs it advances `t` on its own frames (see Cava.qml), so
@@ -50,7 +50,7 @@ Singleton {
     }
 
     Timer {
-        interval: 33
+        interval: 50
         repeat: true
         running: (root.ambient || root.tickUsers > 0) && !root.driven
         onTriggered: root.advance(interval)
