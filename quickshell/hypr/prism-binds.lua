@@ -25,6 +25,9 @@ bind(mainMod .. " + N",                hl.dsp.exec_cmd("qs ipc call sidebar togg
 bind(mainMod .. " + O",                hl.dsp.exec_cmd("qs ipc call overview toggle"))
 bind(mainMod .. " + SHIFT + TAB",      hl.dsp.exec_cmd("qs ipc call switcher toggle"))
 bind(mainMod .. " + M",                hl.dsp.exec_cmd("qs ipc call power toggle"))
+-- physical power button: logind ignores it (logind.conf.d/rice-power.conf),
+-- short press opens the power menu, a long press is the hardware force-off
+bind("XF86PowerOff",                    hl.dsp.exec_cmd("qs ipc call power toggle"))
 bind(mainMod .. " + slash",            hl.dsp.exec_cmd("qs ipc call cheatsheet toggle"))
 -- bind(mainMod .. " + SHIFT + Q",        hl.dsp.exec_cmd("qs ipc call edit toggle"))
 

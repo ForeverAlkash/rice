@@ -107,6 +107,15 @@ PAM
     ok "pam: /etc/pam.d/hyprlock-password"
 fi
 
+# ------------------------------------------------------------- power button --
+# the shell binds XF86PowerOff to the power menu; logind must leave the key
+# alone for that to work (a long press is still a hardware force-off)
+sudo mkdir -p /etc/systemd/logind.conf.d
+printf '[Login]\n# rice: the power button opens the shell power menu (bound in hyprland.lua)\nHandlePowerKey=ignore\n' \
+    | sudo tee /etc/systemd/logind.conf.d/rice-power.conf >/dev/null
+systemctl kill -s HUP systemd-logind 2>/dev/null || true
+ok "power button: logind ignores it, the shell opens the power menu"
+
 # ---------------------------------------------------------------- wallpaper --
 if [[ ! -d $CFG/quickshell/wallpapers || -z $(ls -A "$CFG/quickshell/wallpapers" 2>/dev/null) ]]; then
     echo "тяну обои из prism-shell…"
