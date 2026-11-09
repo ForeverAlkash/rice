@@ -19,9 +19,10 @@ PanelWindow {
     WlrLayershell.namespace: "prism-clock-pill"
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     anchors.top: true
-    anchors.right: true
+    anchors.left: true
+    // centered, right under the main island
     margins.top: Config.bar.height + Config.bar.margin
-    margins.right: Config.bar.margin
+    margins.left: (win.screen?.width ?? 1920) / 2 - implicitWidth / 2
     implicitWidth: 270
     implicitHeight: 60
 
@@ -32,6 +33,8 @@ PanelWindow {
         border.width: 1
         border.color: Theme.alpha(Theme.grad1, Chrono.ringing ? 0.8 : 0.3)
 
-        ClockMini {}
+        ClockMini {
+            anchors.fill: parent
+        }
     }
 }
