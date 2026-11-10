@@ -479,7 +479,8 @@ Item {
                                 font.pixelSize: 9
                                 font.weight: Font.Black
                                 font.letterSpacing: 2
-                                color: Theme.accent(5)
+                                // accents can be pale on light wallpapers — keep them readable on the island
+                                color: Theme.contrastFix(Theme.accent(5), Theme.textBg, 3.2)
                             }
                             Txt {
                                 Layout.fillWidth: true
@@ -491,7 +492,7 @@ Item {
                                 Layout.fillWidth: true
                                 text: Media.artist
                                 font.pixelSize: 12
-                                color: Theme.accent(1)
+                                color: Theme.contrastFix(Theme.accent(1), Theme.textBg, 4.5)
                             }
                         }
                         Visualizer {

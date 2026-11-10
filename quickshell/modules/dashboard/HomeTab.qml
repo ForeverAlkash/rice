@@ -279,12 +279,12 @@ Item {
                         font.pixelSize: 28
                         font.weight: Font.Black
                         font.family: Theme.display
-                        color: Theme.fg
+                        color: Theme.fgAurora
                     }
                     Txt {
                         text: Qt.formatDate(clock.date, "dddd, d MMMM") + "  ·  up " + Utils.human(SysStats.uptime)
                         font.pixelSize: 13
-                        color: Theme.alpha(Theme.fg, 0.8)
+                        color: Theme.alpha(Theme.fgAurora, 0.85)
                     }
                     RowLayout {
                         spacing: 8
@@ -334,7 +334,7 @@ Item {
                         font.pixelSize: 64
                         font.weight: Font.Thin
                         font.family: Theme.display
-                        color: Theme.fg
+                        color: Theme.fgAurora
                     }
                     RowLayout {
                         Layout.alignment: Qt.AlignRight
