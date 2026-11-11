@@ -179,6 +179,11 @@ hl.window_rule({
 })
 
 hl.window_rule({
+    name  = "kitty",
+    match = { class = "^(kitty)$" },
+})
+
+hl.window_rule({
     match = {title = "AnixApp — Просмотр"},
     float = true
 })

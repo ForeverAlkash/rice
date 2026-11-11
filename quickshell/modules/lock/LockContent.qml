@@ -55,9 +55,23 @@ Item {
                 root.busy = false;
                 pw.text = "";
                 root.unlocked();
+            } else {
+                // the PAM conversation only ends here if fprintd itself gave
+                // up (24 h timeout, reader error) — restart immediately so
+                // the print is accepted for as long as the lock screen exists
+                if (!root.preview && !root.busy)
+                    pamFinger.start();
             }
         }
-        onError: {}
+        onError: err => rearmTimer.restart()
+    }
+
+    // cooldown only for real errors, so a failing reader can't spin PAM
+    Timer {
+        id: rearmTimer
+        interval: 1000
+        onTriggered: if (!root.preview && !root.busy)
+            pamFinger.start()
     }
 
     PamContext {

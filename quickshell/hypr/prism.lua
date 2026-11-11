@@ -20,7 +20,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("throne", { workspace = "special:magic silent" })
     hl.exec_cmd("Telegram", { workspace = "3 silent" })
     hl.exec_cmd("firefox", { workspace = "1" })
-    hl.exec_cmd("hyprsunset -t 5500")
     -- touchpad swipe -> mouse4/5 (self-deduping: exits if already running)
     hl.exec_cmd("libinput-gestures")
     
